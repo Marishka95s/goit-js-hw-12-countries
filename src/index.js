@@ -1,8 +1,14 @@
 var debounce = require('lodash.debounce');
+import fetchCountries from './fetchCountries.js';
 import countryItemTpl from './country.hbs';
 import countriesListTpl from './country-list.hbs';
-import fetchCountries from './fetchCountries.js';
-import { alert } from '@pnotify/core';
+
+// import pontyfy styles and js
+import '@pnotify/core/dist/BrightTheme.css';
+import '@pnotify/core/dist/PNotify.css';
+import '@pnotify/mobile/dist/PNotifyMobile.css';
+import {error} from '@pnotify/core/dist/PNotify.js';
+
 import './styles.css';
 
 const resultsContainer = document.querySelector('.results-section');
@@ -12,21 +18,24 @@ input.addEventListener('input', debounce(onInputChange, 500));
 
 function onInputChange(){
     let searchQuery = input.value;
+    console.log('input changed');
+    resultsContainer.innerHTML = '';
     if (input.value !== ''){
         console.log(searchQuery);
         fetchCountries(searchQuery).then(data => {
-            if (data.length >= 10) {
-                alert({
-                    text: 'Необходимо сделать запрос более специфичным!'
-                });
+            if (data.status === 404) {
+                pontyfyMassage('Nothing was found for your query!')
+            }
+            else if (data.length > 10) {
+                pontyfyMassage('Too many matches found. Please enter more specific query!');
                 }
             else if (data.length === 1) {
                 const resultsMarkup = createMenuItemsMarkup(data);
-                resultsContainer.insertAdjacentHTML('afterend', resultsMarkup);
+                resultsContainer.insertAdjacentHTML('beforeend', resultsMarkup);
             }
             else if (2 <= data.length <= 9){
                 const resList = createItemsList(data);
-                resultsContainer.insertAdjacentHTML('afterend', resList);        
+                resultsContainer.insertAdjacentHTML('beforeend', resList);        
             }
     })
 }};
@@ -36,4 +45,10 @@ function createMenuItemsMarkup(data) {
 }
 function createItemsList(data) {
     return countriesListTpl(data);
+}
+function pontyfyMassage(message) {
+    error ({
+            title: `${message}`,
+            delay: 1200,
+        });
 }
