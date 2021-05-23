@@ -33,7 +33,7 @@ function onInputChange(){
                 const resultsMarkup = createMenuItemsMarkup(data);
                 resultsContainer.insertAdjacentHTML('beforeend', resultsMarkup);
             }
-            else if (2 <= data.length <= 9){
+            else if (2 <= data.length <= 10){
                 const resList = createItemsList(data);
                 resultsContainer.insertAdjacentHTML('beforeend', resList);        
             }
