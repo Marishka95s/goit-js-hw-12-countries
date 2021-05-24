@@ -20,7 +20,7 @@ function onInputChange(){
     let searchQuery = input.value;
     console.log('input changed');
     resultsContainer.innerHTML = '';
-    if (input.value !== '' && input.value !== ' '){
+    if (input.value !== '' && input.value !== ' ' && input.value !== '.'){
         console.log(searchQuery);
         fetchCountries(searchQuery).then(data => {
             if (data.status === 404) {
